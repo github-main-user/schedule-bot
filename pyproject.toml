@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "schedule-bot-v2"
+name = "schedule-bot"
 version = "0.1.0"
 description = ""
 authors = ["github-main-user <kolya.skripn@mail.ru>"]
@@ -7,8 +7,8 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.13"
-python-telegram-bot = "^21.9"
 requests = "^2.32.3"
+python-telegram-bot = "^21.9"
 
 
 [build-system]
