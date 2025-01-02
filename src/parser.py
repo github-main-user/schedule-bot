@@ -1,5 +1,3 @@
-#! /usr/bin/env python
-
 import os
 from dataclasses import dataclass
 from datetime import date, datetime, time
