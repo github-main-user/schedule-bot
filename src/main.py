@@ -18,76 +18,95 @@ logging.basicConfig(
 )
 
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    effective_chat = update.effective_chat
-    if effective_chat is None:
-        logging.warning('Effective chat is None.')
-        return
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle the /start command."""
+    chat_id = update.effective_chat.id  # type: ignore
 
     # Send welcome message
     await context.bot.send_message(
-        chat_id=effective_chat.id,
-        text='Welcome! I will send you a message every day at 17:00 (UTC+3).',
+        chat_id=chat_id,  # type: ignore
+        text='Bot will update the schedule every day at 22:00 (GMT-3)',
     )
 
-    # Schedule the job if not already scheduled
-    chat_id = effective_chat.id
     job_queue = context.job_queue
-    if job_queue is None:
-        logging.warning('Job queue is None.')
-        return
-    current_jobs = job_queue.get_jobs_by_name(f'daily_message_{chat_id}')
 
-    if not current_jobs is None:
-        job_queue.run_daily(
-            daily_check,
-            time=time(hour=18, minute=0, tzinfo=MSK_TZ),
-            data=chat_id,
-            name=f'daily_message_{chat_id}',  # Unique name for the job
-        )
+    job_queue.run_daily(  # type: ignore
+        daily_check,
+        time=time(hour=22, minute=0, tzinfo=MSK_TZ),
+        data=chat_id,  # type: ignore
+    )
 
 
-async def daily_check(context: ContextTypes.DEFAULT_TYPE):
-    # Ensure context.job exists
-    if context.job is None:
-        logging.warning("context.job is None.")
-        return
+async def send_lecture_info(context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Send inforemation about a specific lecture."""
+    chat_id, date, lecture = context.job.data  # type: ignore
 
+    await context.bot.send_message(
+        chat_id=chat_id,  # type: ignore
+        text=f'{int((datetime.combine(date, lecture.time) - datetime.now()).total_seconds() / 60)} minutes left before the next lecture:'
+        f'\n*{lecture.time.strftime('%H:%M')}*: {lecture.discipline.name} ({lecture.cabinet})'
+        f'\n{lecture.teacher} ({'практика' if lecture.discipline.is_practice else 'лекция'})',
+        parse_mode='Markdown',
+    )
+
+
+async def daily_check(context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Perform the daily check to update the schedule."""
     # Ensure context.job.data exists
-    chat_id = context.job.data
-    if not isinstance(chat_id, int | str):
-        logging.warning(
-            "context.job.data is not int or str. Cannot send scheduled message."
-        )
-        return
+    chat_id = context.job.data  # type: ignore
 
-    sf = parser.ScheduleFormer()
-    schedule = sf.form_schedule()
-    tomorrow_date = (datetime.now(tz=MSK_TZ) + timedelta(days=1)).date()
-    tomorrow_lectures = schedule.get(tomorrow_date, [])
-    nearest_day = lectures[0] if len(lectures := sorted(schedule.keys())) > 0 else None
-
-    # Send the daily message
     try:
-        if len(tomorrow_lectures) > 0:
+        # Generate the schedule
+        schedule = parser.ScheduleFormer().form_schedule()
+        tomorrow_date = (datetime.now(tz=MSK_TZ) + timedelta(days=1)).date()
+        tomorrow_lectures = schedule.get(tomorrow_date, [])
+
+        if tomorrow_lectures:
             await context.bot.send_message(
-                chat_id=chat_id,
-                text=f'Tomorrow will be {len(tomorrow_lectures)} lectures.',
+                chat_id=chat_id,  # type: ignore
+                text=f"Tomorrow will be *{len(tomorrow_lectures)}* lecture(s):",
+                parse_mode='Markdown',
+            )
+
+            formatted_lectures = [tomorrow_date.strftime('*%d %b (%a)*')]
+            # Schedule reminders for lectures
+            for lecture in tomorrow_lectures:
+                formatted_lectures.append(
+                    f'*{lecture.time.strftime('%H:%M')}*: {lecture.discipline.name} ({lecture.cabinet})'
+                )
+                context.job_queue.run_once(  # type: ignore
+                    send_lecture_info,
+                    when=datetime.combine(tomorrow_date, lecture.time, tzinfo=MSK_TZ),
+                    data=(chat_id, tomorrow_date, lecture),
+                )
+
+            await context.bot.send_message(
+                chat_id=chat_id,  # type: ignore
+                text=f"{'\n'.join(formatted_lectures)}",
+                parse_mode='Markdown',
             )
         else:
-            if nearest_day is not None:
+            # Notify about the next lecture day
+            nearest_day = min(schedule.keys()) if schedule else None
+            if nearest_day:
                 await context.bot.send_message(
-                    chat_id=chat_id, text=f'The nearest lecture will be {nearest_day}.'
+                    chat_id=chat_id,  # type: ignore
+                    text=f"The nearest lecture will be on {nearest_day.strftime('%d %b, %a')} ({(nearest_day - datetime.now().date()).days} day(s)).",
                 )
             else:
                 await context.bot.send_message(
-                    chat_id=chat_id, text=f'There is no lectures.'
+                    chat_id=chat_id,  # type: ignore
+                    text="There are no upcoming lectures.",
                 )
     except Exception as e:
-        logging.error(f"Failed to send message to chat_id {chat_id}: {e}")
+        logging.error(f"Error in daily_check: {e}")
+        await context.bot.send_message(
+            chat_id=chat_id,  # type: ignore
+            text="An error occurred while updating the schedule.",
+        )
 
 
-if __name__ == '__main__':
+def main() -> None:
     token = os.getenv('TELEGRAM_TOKEN', '')
     if not token:
         exit('set the TELEGRAM_TOKEN variable.')
@@ -97,3 +116,7 @@ if __name__ == '__main__':
     app.add_handler(CommandHandler('start', start))
 
     app.run_polling()
+
+
+if __name__ == '__main__':
+    main()
