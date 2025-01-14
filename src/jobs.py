@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 from telegram.ext import ContextTypes
 
-from .config import DAILY_TEMPLATE, MSK_TZ
+from config import DAILY_TEMPLATE, MSK_TZ
 
 
 async def send_lecture_info_job(context: ContextTypes.DEFAULT_TYPE) -> None:

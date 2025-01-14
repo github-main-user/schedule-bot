@@ -2,7 +2,7 @@ import pytz
 from datetime import time
 
 MSK_TZ = pytz.timezone('Etc/GMT-3')
-SCHEDULE_UPDATE_TIME = time(22, 0, tzinfo=MSK_TZ)
+SCHEDULE_UPDATE_TIME = time(21, 0, tzinfo=MSK_TZ)
 
 DAILY_TEMPLATE = """\
 {minutes_left} minutes left before the next lecture:'
