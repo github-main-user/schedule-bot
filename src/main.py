@@ -38,7 +38,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def status(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     chat_id = update.effective_chat.id  # type: ignore
-    jobs = context.job_queue.jobs() # type: ignore
+    jobs = context.job_queue.jobs()  # type: ignore
 
     await context.bot.send_message(
         chat_id=chat_id,  # type: ignore
