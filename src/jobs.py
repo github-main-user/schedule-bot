@@ -1,10 +1,9 @@
-import math
-import parser
 from datetime import datetime, timedelta
+from parser import ScheduleFormer
 
 from telegram.ext import ContextTypes
 
-from config import DAILY_TEMPLATE, MSK_TZ
+from config import MSK_TZ, format_lectures, format_next_lecture
 
 
 async def send_lecture_info_job(context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -13,17 +12,7 @@ async def send_lecture_info_job(context: ContextTypes.DEFAULT_TYPE) -> None:
 
     await context.bot.send_message(
         chat_id=chat_id,  # type: ignore
-        text=DAILY_TEMPLATE.format(
-            minutes_left=math.ceil(
-                (datetime.combine(date, lecture.time) - datetime.now()).total_seconds()
-                / 60
-            ),
-            lecture_time=lecture.time.strftime('%H:%M'),
-            lecture_name=lecture.discipline.name,
-            cabinet=lecture.cabinet,
-            teacher=lecture.teacher,
-            is_practice='практика' if lecture.discipline.is_practice else 'лекция',
-        ),
+        text=format_next_lecture(lecture, date),
         parse_mode='Markdown',
     )
 
@@ -34,7 +23,7 @@ async def daily_check(context: ContextTypes.DEFAULT_TYPE) -> None:
 
     try:
         # Generate the schedule
-        schedule = parser.ScheduleFormer().form_schedule()
+        schedule = ScheduleFormer().form_schedule()
         tomorrow_date = (datetime.now(tz=MSK_TZ) + timedelta(days=1)).date()
         tomorrow_lectures = schedule.get(tomorrow_date, [])
 
@@ -45,22 +34,19 @@ async def daily_check(context: ContextTypes.DEFAULT_TYPE) -> None:
                 parse_mode='Markdown',
             )
 
-            formatted_lectures = [tomorrow_date.strftime('*%d %b (%a)*')]
             # Schedule reminders for lectures
             for lecture in tomorrow_lectures:
-                formatted_lectures.append(
-                    f'*{lecture.time.strftime('%H:%M')}*: {lecture.discipline.name} ({lecture.cabinet})'
-                )
                 context.job_queue.run_once(  # type: ignore
                     send_lecture_info_job,
                     when=datetime.combine(tomorrow_date, lecture.time, tzinfo=MSK_TZ)
                     - timedelta(minutes=15),
                     data=(chat_id, tomorrow_date, lecture),
+                    name=lecture.discipline.name,
                 )
 
             await context.bot.send_message(
                 chat_id=chat_id,  # type: ignore
-                text=f"{'\n'.join(formatted_lectures)}",
+                text=format_lectures(tomorrow_lectures, tomorrow_date),
                 parse_mode='Markdown',
             )
         else:
