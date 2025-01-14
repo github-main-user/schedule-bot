@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-from config import SCHEDULE_UPDATE_TIME
+from config import SCHEDULE_UPDATE_TIME, format_jobs
 from jobs import daily_check
 
 load_dotenv()
@@ -20,7 +20,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle the /start command."""
     chat_id = update.effective_chat.id  # type: ignore
 
-    # Send welcome message
     await context.bot.send_message(
         chat_id=chat_id,  # type: ignore
         text=f'Bot will update the schedule every day at {SCHEDULE_UPDATE_TIME.strftime('%H:%M')} (GMT-3)',
@@ -32,6 +31,18 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         daily_check,
         time=SCHEDULE_UPDATE_TIME,
         data=chat_id,  # type: ignore
+        name='Daily Check',
+    )
+
+
+async def status(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    chat_id = update.effective_chat.id  # type: ignore
+
+    job_queue = context.job_queue
+
+    await context.bot.send_message(
+        chat_id=chat_id,  # type: ignore
+        text=f'{format_jobs(job_queue.jobs())}',  # type: ignore
     )
 
 
@@ -43,6 +54,7 @@ def main() -> None:
     app = ApplicationBuilder().token(token).build()
 
     app.add_handler(CommandHandler('start', start))
+    app.add_handler(CommandHandler('status', status))
 
     app.run_polling()
 
