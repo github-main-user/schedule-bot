@@ -19,13 +19,14 @@ logging.basicConfig(
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle the /start command."""
     chat_id = update.effective_chat.id  # type: ignore
+    job_queue = context.job_queue
+    if job_queue.get_jobs_by_name('Daily Check'):  # type: ignore
+        return
 
     await context.bot.send_message(
         chat_id=chat_id,  # type: ignore
         text=f'Bot will update the schedule every day at {SCHEDULE_UPDATE_TIME.strftime('%H:%M')} (GMT-3)',
     )
-
-    job_queue = context.job_queue
 
     job_queue.run_daily(  # type: ignore
         daily_check,
