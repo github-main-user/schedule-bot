@@ -5,7 +5,7 @@ from parser import Lecture
 import pytz
 
 MSK_TZ = pytz.timezone('Etc/GMT-3')
-SCHEDULE_UPDATE_TIME = time(22, 23, tzinfo=MSK_TZ)
+SCHEDULE_UPDATE_TIME = time(22, 0, tzinfo=MSK_TZ)
 
 
 def format_next_lecture(lecture: Lecture, date: date) -> str:
