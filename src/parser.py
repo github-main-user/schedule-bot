@@ -39,9 +39,7 @@ class ScheduleFormer:
     def _request_raw_schedule(self) -> list:
         r = requests.get(url=SCHEDULE_URL, timeout=5)
         if r.status_code != 200:
-            # TODO: raise error
-            print('There is some error: status code is not 200')
-            exit()
+            r.raise_for_status()
 
         return r.json().get('scheduleChanges', [])
 
