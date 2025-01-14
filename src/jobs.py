@@ -1,6 +1,6 @@
 import math
 import parser
-from datetime import datetime, time, timedelta
+from datetime import datetime, timedelta
 
 from telegram.ext import ContextTypes
 
