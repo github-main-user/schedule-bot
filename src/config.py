@@ -9,16 +9,18 @@ SCHEDULE_UPDATE_TIME = time(22, 0, tzinfo=MSK_TZ)
 
 
 def format_next_lecture(lecture: Lecture, date: date) -> str:
-    minutes_left = (
-        math.ceil(
-            (datetime.combine(date, lecture.time) - datetime.now()).total_seconds() / 60
-        ),
+    minutes_left = math.ceil(
+        (
+            datetime.combine(date, lecture.time, tzinfo=MSK_TZ)
+            - datetime.now(tz=MSK_TZ)
+        ).total_seconds()
+        / 60
     )
     is_practice = 'практика' if lecture.discipline.is_practice else 'лекция'
 
     return (
-        f'{minutes_left} minutes left before the next lecture:'
-        f'*{lecture.time.strftime('%H:%M')}*: {lecture.discipline.name} ({lecture.cabinet})'
+        f'{minutes_left} minutes left before the next lecture:\n'
+        f'*{lecture.time.strftime('%H:%M')}*: {lecture.discipline.name} ({lecture.cabinet})\n'
         f'{lecture.teacher} ({is_practice})'
     )
 
