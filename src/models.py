@@ -15,7 +15,7 @@ class Teacher(Base):
     patronymic: Mapped[str]
     birthday: Mapped[date]
 
-    __table_args__ = (UniqueConstraint("lastname", "fistname", "patronymic"),)
+    __table_args__ = (UniqueConstraint("lastname", "firstname", "patronymic", name="uq_teacher_fullname"),)
 
 
 class Discipline(Base):
