@@ -24,6 +24,16 @@ class Settings(BaseSettings):
     TZ: pytz.BaseTzInfo = pytz.timezone("Etc/GMT-3")
     SCHEDULE_UPDATE_TIME: time = time(hour=22, minute=0, tzinfo=TZ)
 
+    SCHEDULE_TIMES: tuple = (
+        time(9, 00),
+        time(10, 40),
+        time(12, 40),
+        time(14, 20),
+        time(16, 00),
+        time(17, 40),
+        time(19, 20),
+    )
+
     model_config = SettingsConfigDict(env_file=".env")
 
 
