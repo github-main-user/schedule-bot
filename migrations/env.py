@@ -5,7 +5,7 @@ from sqlalchemy import engine_from_config, pool
 
 from src.config import settings
 from src.db import Base
-from src.models import *  # noqa
+from src.models.schedule import *
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
