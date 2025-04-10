@@ -18,6 +18,7 @@ class SubscriberRepository:
     async def delete(self, chat_id: int) -> None:
         result = await self.get_by_chat_id(chat_id)
         await self.session.delete(result)
+        await self.session.commit()
 
     async def exists(self, chat_id: int) -> bool:
         return bool(await self.get_by_chat_id(chat_id))
