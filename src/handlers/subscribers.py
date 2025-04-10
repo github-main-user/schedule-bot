@@ -21,10 +21,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             await repo.create(chat_id)
             message = messages.SUBSCRIBED.format(time=settings.SCHEDULE_UPDATE_TIME.strftime("%H:%M"))
 
-    await context.bot.send_message(
-        chat_id=chat_id,
-        text=message,
-    )
+    await context.bot.send_message(chat_id=chat_id, text=message)
 
 
 async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
