@@ -14,6 +14,10 @@ class SubscriberRepository:
         self.session.add(subscriber)
         await self.session.commit()
 
+    async def delete(self, subscriber: Subscriber) -> None:
+        await self.session.delete(subscriber)
+        await self.session.commit()
+
     async def get_all(self) -> Sequence[Subscriber]:
         stmt = select(Subscriber)
         result = await self.session.execute(stmt)
