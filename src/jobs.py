@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from telegram.ext import ContextTypes
 
@@ -14,8 +14,8 @@ async def daily_check(context: ContextTypes.DEFAULT_TYPE) -> None:
     schedule_repo = ScheduleRepository(session)
     subscriber_repo = SubscriberRepository(session)
 
-    # TODO: fix now to now + 1 day
-    tomorrow_lectures = await schedule_repo.get_lectures_for_day(datetime.now(settings.TIMEZONE).date())
+    tomorrow_date = datetime.now(settings.TIMEZONE).date() + timedelta(days=1)
+    tomorrow_lectures = await schedule_repo.get_lectures_for_day(tomorrow_date)
 
     if tomorrow_lectures:
         message = messages.TOMORROW_N_LECTURES.format(n=len(tomorrow_lectures))
