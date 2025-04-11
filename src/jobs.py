@@ -15,7 +15,7 @@ async def daily_check(context: ContextTypes.DEFAULT_TYPE) -> None:
     subscriber_repo = SubscriberRepository(session)
 
     # TODO: fix now to now + 1 day
-    tomorrow_lectures = await schedule_repo.get_lectures_for_day(datetime.now(settings.TZ).date())
+    tomorrow_lectures = await schedule_repo.get_lectures_for_day(datetime.now(settings.TIMEZONE).date())
 
     if tomorrow_lectures:
         message = messages.TOMORROW_N_LECTURES.format(n=len(tomorrow_lectures))

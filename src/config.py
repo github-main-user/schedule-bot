@@ -21,8 +21,8 @@ class Settings(BaseSettings):
     def SCHEDULE_URL(self) -> str:
         return f"https://sksi.ru/Students/ScheduleJson/?id={self.GROUP_ID}"
 
-    TZ: pytz.BaseTzInfo = pytz.timezone("Etc/GMT-3")
-    SCHEDULE_UPDATE_TIME: time = time(hour=22, minute=0, tzinfo=TZ)
+    TIMEZONE: pytz.BaseTzInfo = pytz.timezone("Etc/GMT-3")
+    SCHEDULE_UPDATE_TIME: time = time(hour=22, minute=0, tzinfo=TIMEZONE)
 
     SCHEDULE_TIMES: tuple = (
         time(9, 00),
