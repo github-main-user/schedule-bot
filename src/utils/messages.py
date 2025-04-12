@@ -1,10 +1,10 @@
 HELP = """\
-It it a bot for the SKSI institute.
+It is a bot for the SKSI institute.
 Bot fetches and shows schedule for the "ИТБ-24" group.
 Bot will update schedule every day a {time}, and notify you about every lecture at {n} minutes before it starts.
 
 Available commands:
-- /help - show this help message
+- /help - show this message
 - /start - start bot
 - /stop - stop bot
 """
