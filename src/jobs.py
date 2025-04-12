@@ -26,7 +26,6 @@ async def daily_check_job(context: ContextTypes.DEFAULT_TYPE) -> None:
         message = messages.EMPTY_TOMORROW
 
     subscribers = await subscriber_repo.get_all()
-    print(subscribers)
 
     for subscriber in subscribers:
         await context.bot.send_message(
