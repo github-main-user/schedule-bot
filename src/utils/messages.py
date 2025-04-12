@@ -16,3 +16,9 @@ NOT_SUBSCRIBED = "You are not subscribed"
 
 EMPTY_TOMORROW = "There are no lectures tomorrow"
 TOMORROW_N_LECTURES = "Tomorrow will be {n} lecture(s)"
+
+LECTURE_TEMPLATE = """\
+*{date}*
+*{time}* {name} ({cabinet}) ({is_practice})
+{teacher} ({age} года)
+"""
