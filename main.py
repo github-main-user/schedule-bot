@@ -20,7 +20,7 @@ def main() -> None:
         logging.error("job queue is None")
         return
 
-    job_queue.run_once(daily_check, 0)
+    job_queue.run_daily(daily_check, time=settings.SCHEDULE_UPDATE_TIME)
 
     app.run_polling()
 
