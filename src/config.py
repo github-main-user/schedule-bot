@@ -34,6 +34,8 @@ class Settings(BaseSettings):
         time(19, 20),
     )
 
+    MINUTES_BEFORE_LECTURE: int = 15
+
     model_config = SettingsConfigDict(env_file=".env")
 
 
