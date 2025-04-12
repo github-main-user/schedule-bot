@@ -4,6 +4,7 @@ import logging
 from telegram.ext import ApplicationBuilder, JobQueue
 
 from src.config import settings
+from src.handlers.schedule import schedule_handlers
 from src.handlers.special import special_handlers
 from src.handlers.subscribers import command_handlers
 from src.jobs import daily_check_job
@@ -26,6 +27,7 @@ def main() -> None:
 
     app.add_handlers(command_handlers)
     app.add_handlers(special_handlers)
+    app.add_handlers(schedule_handlers)
 
     app.run_polling()
 
