@@ -9,7 +9,7 @@ from src.repositories.subscriber_repository import SubscriberRepository
 from src.utils import messages
 
 
-async def daily_check(context: ContextTypes.DEFAULT_TYPE) -> None:
+async def daily_check_job(context: ContextTypes.DEFAULT_TYPE) -> None:
     session = await get_session()
     schedule_repo = ScheduleRepository(session)
     subscriber_repo = SubscriberRepository(session)

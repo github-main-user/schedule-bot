@@ -5,7 +5,7 @@ from telegram.ext import ApplicationBuilder
 
 from src.config import settings
 from src.handlers.subscribers import command_handlers
-from src.jobs import daily_check
+from src.jobs import daily_check_job
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 
@@ -20,7 +20,7 @@ def main() -> None:
         logging.error("job queue is None")
         return
 
-    job_queue.run_daily(daily_check, time=settings.SCHEDULE_UPDATE_TIME)
+    job_queue.run_daily(daily_check_job, time=settings.SCHEDULE_UPDATE_TIME)
 
     app.run_polling()
 
