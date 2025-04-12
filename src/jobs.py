@@ -6,10 +6,13 @@ from src.config import settings
 from src.db import get_session
 from src.repositories.schedule_repository import ScheduleRepository
 from src.repositories.subscriber_repository import SubscriberRepository
+from src.services.schedule import update_schedule
 from src.utils import messages
 
 
 async def daily_check_job(context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update_schedule()
+
     session = await get_session()
     schedule_repo = ScheduleRepository(session)
     subscriber_repo = SubscriberRepository(session)
