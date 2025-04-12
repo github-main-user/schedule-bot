@@ -19,7 +19,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             message = messages.ALREADY_SUBSCRIBED
         else:
             await repo.create(chat_id)
-            message = messages.SUBSCRIBED.format(time=settings.SCHEDULE_UPDATE_TIME.strftime("%H:%M"))
+            message = messages.SUBSCRIBED.format(update_time=settings.SCHEDULE_UPDATE_TIME.strftime("%H:%M"))
 
     await context.bot.send_message(chat_id=chat_id, text=message)
 
