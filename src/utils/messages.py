@@ -9,7 +9,7 @@ Available commands:
 - /stop - stop bot
 """
 
-SUBSCRIBED = "You were subscribed to receive updates in schedule every day at {update_time}"
+SUBSCRIBED = "You are subscribed to receive info about upcoming lectures every day at {update_time}"
 UNSUBSCRIBED = "You are unsubscribed now"
 ALREADY_SUBSCRIBED = "You are already subscribed"
 NOT_SUBSCRIBED = "You are not subscribed"
