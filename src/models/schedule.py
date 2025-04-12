@@ -3,11 +3,13 @@ from datetime import date, datetime
 from sqlalchemy import ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from src.config import settings
 from src.db import Base
 
 
 class Teacher(Base):
     __tablename__ = "teachers"
+    __table_args__ = (UniqueConstraint("lastname", "firstname", "patronymic", name="uq_teacher_fullname"),)
 
     id: Mapped[int] = mapped_column(primary_key=True)
     lastname: Mapped[str]
@@ -15,7 +17,21 @@ class Teacher(Base):
     patronymic: Mapped[str]
     birthday: Mapped[date]
 
-    __table_args__ = (UniqueConstraint("lastname", "firstname", "patronymic", name="uq_teacher_fullname"),)
+    @property
+    def fullname(self) -> str:
+        return f"{self.lastname} {self.firstname} {self.patronymic}"
+
+    @property
+    def initials(self) -> str:
+        return f"{self.lastname} {self.firstname[:1]}. {self.patronymic[:1]}."
+
+    @property
+    def age(self) -> int:
+        birthday_combined = datetime.combine(self.birthday, datetime.min.time(), tzinfo=settings.TIMEZONE)
+
+        delta_age = datetime.now(settings.TIMEZONE) - birthday_combined
+        years = int(delta_age.days / 365.25)
+        return years
 
 
 class Discipline(Base):
