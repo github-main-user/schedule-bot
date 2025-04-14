@@ -10,7 +10,7 @@ from src.services.schedule import update_schedule
 from src.utils import messages, schedule_utils
 
 
-async def daily_check_job(context: ContextTypes.DEFAULT_TYPE) -> None:
+async def daily_schedule_update(context: ContextTypes.DEFAULT_TYPE) -> None:
     await update_schedule()
 
     session = await get_session()

@@ -18,7 +18,7 @@ def setup_jobs(job_queue: JobQueue | None) -> None:
         logging.error("job queue is None")
         return
 
-    job_queue.run_daily(jobs.daily_check_job, time=settings.SCHEDULE_UPDATE_TIME)
+    job_queue.run_daily(jobs.daily_schedule_update, time=settings.SCHEDULE_UPDATE_TIME)
 
     for time in settings.SCHEDULE_TIMES:
         job_queue.run_daily(
