@@ -19,6 +19,6 @@ TOMORROW_N_LECTURES = "Tomorrow will be {n} lecture(s)"
 
 DATE_TEMPLATE = "*{date:%d %b (%a)}*"
 
-LECTURE_BASE_TEMPLATE = "*{time:%H:%M}*: {name} ({event_type}) ({cabinet})"
+LECTURE_BASE_TEMPLATE = "*{time:%H:%M}*: {discipline_name} ({event_type}) ({cabinet})"
 
 LECTURE_VERBOSE_TEMPLATE = LECTURE_BASE_TEMPLATE + "\n{teacher} ({age} yeard old)"

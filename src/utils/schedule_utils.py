@@ -16,7 +16,7 @@ def request_raw_schedule() -> list:
 def format_lecture(lecture: Lecture) -> str:
     return messages.LECTURE_BASE_TEMPLATE.format(
         time=lecture.date_time,
-        name=lecture.name,
+        discipline_name=lecture.discipline.name,
         event_type="Практика" if lecture.is_practice else "Лекция",
         cabinet=lecture.cabinet,
     )
@@ -25,7 +25,7 @@ def format_lecture(lecture: Lecture) -> str:
 def format_lecture_verbose(lecture: Lecture) -> str:
     return messages.LECTURE_VERBOSE_TEMPLATE.format(
         time=lecture.date_time,
-        name=lecture.name,
+        discipline_name=lecture.discipline.name,
         event_type="Практика" if lecture.is_practice else "Лекция",
         cabinet=lecture.cabinet,
         teacher=lecture.teacher.fullname,
