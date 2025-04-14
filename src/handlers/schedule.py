@@ -1,12 +1,9 @@
-from datetime import datetime
-
 from telegram import Update
 from telegram.ext import CommandHandler, ContextTypes
 
-from src.config import settings
 from src.db import get_session
 from src.repositories.schedule_repository import ScheduleRepository
-from src.utils import messages, schedule_utils
+from src.utils import schedule_utils
 
 
 async def next(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -17,7 +14,7 @@ async def next(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     async with await get_session() as session:
         repo = ScheduleRepository(session)
 
-        now = datetime.now(settings.TIMEZONE)
+        now = schedule_utils.get_local_now()
         next_lecture = await repo.get_next_lecture_after(now)
         if not next_lecture:
             return

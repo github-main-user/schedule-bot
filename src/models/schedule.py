@@ -5,6 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.config import settings
 from src.db import Base
+from src.utils import schedule_utils
 
 
 class Teacher(Base):
@@ -29,7 +30,8 @@ class Teacher(Base):
     def age(self) -> int:
         birthday_combined = datetime.combine(self.birthday, datetime.min.time(), tzinfo=settings.TIMEZONE)
 
-        delta_age = datetime.now(settings.TIMEZONE) - birthday_combined
+        now = schedule_utils.get_local_now()
+        delta_age = now - birthday_combined
         years = int(delta_age.days / 365.25)
         return years
 

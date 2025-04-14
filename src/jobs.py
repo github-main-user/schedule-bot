@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from telegram.ext import ContextTypes
 
@@ -17,7 +17,7 @@ async def daily_check_job(context: ContextTypes.DEFAULT_TYPE) -> None:
     schedule_repo = ScheduleRepository(session)
     subscriber_repo = SubscriberRepository(session)
 
-    tomorrow_date = datetime.now(settings.TIMEZONE).date() + timedelta(days=1)
+    tomorrow_date = schedule_utils.get_tomorrow()
     tomorrow_lectures = await schedule_repo.get_lectures_for_day(tomorrow_date)
 
     subscribers = await subscriber_repo.get_all()
@@ -46,7 +46,7 @@ async def notify_about_upcoming_lecture(context: ContextTypes.DEFAULT_TYPE) -> N
     schedule_repo = ScheduleRepository(session)
     subscriber_repo = SubscriberRepository(session)
 
-    now = datetime.now(settings.TIMEZONE)
+    now = schedule_utils.get_local_now()
     next_lecture = await schedule_repo.get_next_lecture_after(now)
 
     if not next_lecture:
