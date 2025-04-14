@@ -4,7 +4,7 @@ from src.db import get_session
 from src.repositories.schedule_repository import ScheduleRepository
 from src.repositories.subscriber_repository import SubscriberRepository
 from src.services.schedule import update_schedule
-from src.utils import messages, schedule_utils
+from src.utils import global_utils, messages, schedule_utils
 
 
 async def daily_schedule_update(context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -14,7 +14,7 @@ async def daily_schedule_update(context: ContextTypes.DEFAULT_TYPE) -> None:
     schedule_repo = ScheduleRepository(session)
     subscriber_repo = SubscriberRepository(session)
 
-    tomorrow_date = schedule_utils.get_tomorrow()
+    tomorrow_date = global_utils.get_tomorrow()
     tomorrow_lectures = await schedule_repo.get_lectures_for_day(tomorrow_date)
 
     subscribers = await subscriber_repo.get_all()
@@ -43,7 +43,7 @@ async def notify_about_upcoming_lecture(context: ContextTypes.DEFAULT_TYPE) -> N
     schedule_repo = ScheduleRepository(session)
     subscriber_repo = SubscriberRepository(session)
 
-    now = schedule_utils.get_local_now()
+    now = global_utils.get_local_now()
     next_lecture = await schedule_repo.get_next_lecture_after(now)
 
     if not next_lecture:

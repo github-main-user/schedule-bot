@@ -8,7 +8,7 @@ from src.config import settings
 from src.handlers.schedule import schedule_handlers
 from src.handlers.special import special_handlers
 from src.handlers.subscribers import command_handlers
-from src.utils.schedule_utils import subtract_minutes
+from src.utils.global_utils import subtract_minutes
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 
@@ -25,6 +25,8 @@ def setup_jobs(job_queue: JobQueue | None) -> None:
             jobs.notify_about_upcoming_lecture,
             time=subtract_minutes(time, settings.MINUTES_BEFORE_LECTURE),
         )
+
+    print(job_queue.jobs())
 
 
 def main() -> None:
