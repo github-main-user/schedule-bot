@@ -10,7 +10,7 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         return
 
     message = messages.HELP.format(
-        update_time=settings.SCHEDULE_UPDATE_TIME.strftime("%H:%M"),
+        update_time=settings.SCHEDULE_UPDATE_TIME,
         minutes_before=settings.MINUTES_BEFORE_LECTURE,
     )
 
