@@ -32,3 +32,33 @@ async def daily_check_job(context: ContextTypes.DEFAULT_TYPE) -> None:
             chat_id=subscriber.chat_id,
             text=message,
         )
+
+
+async def notify_about_upcoming_lecture(context: ContextTypes.DEFAULT_TYPE) -> None:
+    session = await get_session()
+
+    schedule_repo = ScheduleRepository(session)
+    subscriber_repo = SubscriberRepository(session)
+
+    now = datetime.now(settings.TIMEZONE)
+    next_lecture = await schedule_repo.get_next_lecture_after(now)
+
+    if not next_lecture:
+        return
+
+    message = messages.LECTURE_VERBOSE_TEMPLATE.format(
+        date=next_lecture.date_time.strftime("%d %b (%a)"),
+        time=next_lecture.date_time.strftime("%H:%M"),
+        name=next_lecture.discipline.name,
+        cabinet=next_lecture.cabinet,
+        is_practice="Практика" if next_lecture.is_practice else "Лекция",
+        teacher=next_lecture.teacher.fullname,
+        age=next_lecture.teacher.age,
+    )
+
+    subscribers = await subscriber_repo.get_all()
+    for subscriber in subscribers:
+        await context.bot.send_message(
+            chat_id=subscriber.chat_id,
+            text=message,
+        )
