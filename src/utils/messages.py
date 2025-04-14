@@ -7,6 +7,7 @@ Available commands:
 - /help - show this message
 - /start - start bot
 - /stop - stop bot
+- /next - get the nearest lecture
 """
 
 SUBSCRIBED = "You are subscribed to receive info about upcoming lectures every day at {update_time}"
