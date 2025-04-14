@@ -7,6 +7,11 @@ from src.utils import global_utils, schedule_utils
 
 
 async def next(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    Handles /next command.
+    Fetches the nearest lecture and prints it to the user.
+    Works both for subscribed and unsubscribed users.
+    """
     if update.effective_chat is None:
         return
     chat_id = update.effective_chat.id

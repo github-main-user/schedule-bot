@@ -5,11 +5,11 @@ from sqlalchemy import insert, select
 from src.config import settings
 from src.db import get_session
 from src.models.schedule import Discipline, Lecture, Teacher
-from src.repositories.schedule_repository import ScheduleRepository
 from src.utils import schedule_utils
 
 
 async def update_schedule():
+    """Fetches the remote schedule and appends it to local database."""
     session = await get_session()
 
     raw_lectures = schedule_utils.request_raw_schedule()

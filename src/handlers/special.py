@@ -6,6 +6,10 @@ from src.utils import messages
 
 
 async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    Handles /help command.
+    Prints help message to the user.
+    """
     if not update.effective_chat:
         return
 

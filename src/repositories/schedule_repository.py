@@ -9,15 +9,22 @@ from src.models.schedule import Lecture
 
 
 class ScheduleRepository:
+    """Gives access to the data in Lecture, Teacher, and Discipline tables in database."""
+
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
     async def get_lectures_for_day(self, day: date) -> Sequence[Lecture]:
+        """Returns a sequence of lectures for a given day."""
         stmt = select(Lecture).filter(func.date(Lecture.date_time) == day)
         result = await self.session.execute(stmt)
         return result.scalars().all()
 
     async def get_next_lecture_after(self, dt: datetime) -> Lecture | None:
+        """
+        Fetches the nearest lecture after given datetime.
+        Returns either that lecture or None.
+        """
         stmt = (
             select(Lecture)
             .options(

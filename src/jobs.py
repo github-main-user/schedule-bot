@@ -8,6 +8,10 @@ from src.utils import global_utils, messages, schedule_utils
 
 
 async def daily_schedule_update(context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    Updates the local schedule.
+    Notifies all subscribed users about tomorrow lectures.
+    """
     await update_schedule()
 
     async with await get_session() as session:
@@ -38,6 +42,10 @@ async def daily_schedule_update(context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def notify_about_upcoming_lecture(context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    Fetches a lecture for a specific time.
+    Notify all subscribed users about upcoming lecture.
+    """
     async with await get_session() as session:
         schedule_repo = ScheduleRepository(session)
         subscriber_repo = SubscriberRepository(session)

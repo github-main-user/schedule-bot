@@ -8,6 +8,10 @@ from src.utils import messages
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    Handles /start command.
+    Subscribes user if it is not already subscribed.
+    """
     if update.effective_chat is None:
         return
     chat_id = update.effective_chat.id
@@ -25,6 +29,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    Handles /stop command.
+    Unsubscribes user it it is subscribed.
+    """
     if update.effective_chat is None:
         return
     chat_id = update.effective_chat.id
