@@ -7,7 +7,7 @@ from src.db import get_session
 from src.repositories.schedule_repository import ScheduleRepository
 from src.repositories.subscriber_repository import SubscriberRepository
 from src.services.schedule import update_schedule
-from src.utils import messages
+from src.utils import messages, schedule_utils
 
 
 async def daily_check_job(context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -32,20 +32,11 @@ async def daily_check_job(context: ContextTypes.DEFAULT_TYPE) -> None:
             ),
         )
         if tomorrow_lectures:
+            formatted_lectures = "\n".join([schedule_utils.format_lecture(lecture) for lecture in tomorrow_lectures])
+
             await context.bot.send_message(
                 chat_id=subscriber.chat_id,
-                text=messages.DATE_TEMPLATE.format(date=tomorrow_date)
-                + "\n".join(
-                    [
-                        messages.LECTURE_BASE_TEMPLATE.format(
-                            date=lecture.date_time,
-                            name=lecture.name,
-                            event_type="Практика" if lecture.is_practice else "Лекция",
-                            cabinet=lecture.cabinet,
-                        )
-                        for lecture in tomorrow_lectures
-                    ]
-                ),
+                text=(messages.DATE_TEMPLATE.format(date=tomorrow_date) + "\n" + formatted_lectures),
             )
 
 
