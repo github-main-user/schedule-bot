@@ -1,3 +1,5 @@
+from datetime import date, datetime, timedelta
+
 import requests
 
 from src.config import settings
@@ -11,6 +13,14 @@ def request_raw_schedule() -> list:
     r.raise_for_status()
 
     return r.json().get("scheduleChanges", [])
+
+
+def get_local_now() -> datetime:
+    return datetime.now(settings.TIMEZONE)
+
+
+def get_tomorrow() -> date:
+    return datetime.now(settings.TIMEZONE).date() + timedelta(days=1)
 
 
 def format_lecture(lecture: Lecture) -> str:
