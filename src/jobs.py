@@ -10,14 +10,14 @@ from src.utils import global_utils, messages, schedule_utils
 async def daily_schedule_update(context: ContextTypes.DEFAULT_TYPE) -> None:
     await update_schedule()
 
-    session = await get_session()
-    schedule_repo = ScheduleRepository(session)
-    subscriber_repo = SubscriberRepository(session)
+    async with await get_session() as session:
+        schedule_repo = ScheduleRepository(session)
+        subscriber_repo = SubscriberRepository(session)
 
-    tomorrow_date = global_utils.get_tomorrow()
-    tomorrow_lectures = await schedule_repo.get_lectures_for_day(tomorrow_date)
+        tomorrow_date = global_utils.get_tomorrow()
+        tomorrow_lectures = await schedule_repo.get_lectures_for_day(tomorrow_date)
 
-    subscribers = await subscriber_repo.get_all()
+        subscribers = await subscriber_repo.get_all()
 
     for subscriber in subscribers:
         await context.bot.send_message(
@@ -38,18 +38,18 @@ async def daily_schedule_update(context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def notify_about_upcoming_lecture(context: ContextTypes.DEFAULT_TYPE) -> None:
-    session = await get_session()
+    async with await get_session() as session:
+        schedule_repo = ScheduleRepository(session)
+        subscriber_repo = SubscriberRepository(session)
 
-    schedule_repo = ScheduleRepository(session)
-    subscriber_repo = SubscriberRepository(session)
+        now = global_utils.get_local_now()
+        next_lecture = await schedule_repo.get_next_lecture_after(now)
 
-    now = global_utils.get_local_now()
-    next_lecture = await schedule_repo.get_next_lecture_after(now)
+        if not next_lecture:
+            return
 
-    if not next_lecture:
-        return
+        subscribers = await subscriber_repo.get_all()
 
-    subscribers = await subscriber_repo.get_all()
     for subscriber in subscribers:
         await context.bot.send_message(
             chat_id=subscriber.chat_id,
