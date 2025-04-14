@@ -20,7 +20,7 @@ def get_local_now() -> datetime:
 
 
 def get_tomorrow() -> date:
-    return get_local_now().date() + timedelta(days=1)
+    return date.today() + timedelta(days=1)
 
 
 def format_lecture(lecture: Lecture) -> str:
