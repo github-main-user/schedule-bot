@@ -1,8 +1,5 @@
-from datetime import datetime
-
 from telegram.ext import ContextTypes
 
-from src.config import settings
 from src.db import get_session
 from src.repositories.schedule_repository import ScheduleRepository
 from src.repositories.subscriber_repository import SubscriberRepository
