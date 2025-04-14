@@ -26,8 +26,6 @@ def setup_jobs(job_queue: JobQueue | None) -> None:
             time=subtract_minutes(time, settings.MINUTES_BEFORE_LECTURE),
         )
 
-    print(job_queue.jobs())
-
 
 def main() -> None:
     app = ApplicationBuilder().token(settings.TELEGRAM_TOKEN).build()
