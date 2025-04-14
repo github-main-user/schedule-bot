@@ -21,5 +21,5 @@ TOMORROW_N_LECTURES = "Tomorrow will be {n} lecture(s)"
 LECTURE_VERBOSE_TEMPLATE = """\
 *{date}*
 *{time}* {name} ({cabinet}) ({is_practice})
-{teacher} ({age} года)
+{teacher} ({age} yeard old)
 """
