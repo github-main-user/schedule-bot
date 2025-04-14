@@ -49,19 +49,9 @@ async def notify_about_upcoming_lecture(context: ContextTypes.DEFAULT_TYPE) -> N
     if not next_lecture:
         return
 
-    message = messages.LECTURE_VERBOSE_TEMPLATE.format(
-        date=next_lecture.date_time.strftime("%d %b (%a)"),
-        time=next_lecture.date_time.strftime("%H:%M"),
-        name=next_lecture.discipline.name,
-        cabinet=next_lecture.cabinet,
-        is_practice="Практика" if next_lecture.is_practice else "Лекция",
-        teacher=next_lecture.teacher.fullname,
-        age=next_lecture.teacher.age,
-    )
-
     subscribers = await subscriber_repo.get_all()
     for subscriber in subscribers:
         await context.bot.send_message(
             chat_id=subscriber.chat_id,
-            text=message,
+            text=schedule_utils.format_lecture_verbose(next_lecture),
         )
