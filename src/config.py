@@ -1,6 +1,6 @@
 from datetime import time
+from zoneinfo import ZoneInfo
 
-import pytz
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     def SCHEDULE_URL(self) -> str:
         return f"https://sksi.ru/Students/ScheduleJson/?id={self.GROUP_ID}"
 
-    TIMEZONE: pytz.BaseTzInfo = pytz.timezone("Etc/GMT-3")
+    TIMEZONE: ZoneInfo = ZoneInfo("Europe/Moscow")
     SCHEDULE_UPDATE_TIME: time = time(hour=22, minute=0, tzinfo=TIMEZONE)
 
     SCHEDULE_TIMES: tuple = (
