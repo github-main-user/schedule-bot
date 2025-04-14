@@ -20,18 +20,33 @@ async def daily_check_job(context: ContextTypes.DEFAULT_TYPE) -> None:
     tomorrow_date = datetime.now(settings.TIMEZONE).date() + timedelta(days=1)
     tomorrow_lectures = await schedule_repo.get_lectures_for_day(tomorrow_date)
 
-    if tomorrow_lectures:
-        message = messages.TOMORROW_N_LECTURES.format(n=len(tomorrow_lectures))
-    else:
-        message = messages.EMPTY_TOMORROW
-
     subscribers = await subscriber_repo.get_all()
 
     for subscriber in subscribers:
         await context.bot.send_message(
             chat_id=subscriber.chat_id,
-            text=message,
+            text=(
+                messages.TOMORROW_N_LECTURES.format(n=len(tomorrow_lectures))
+                if tomorrow_lectures
+                else messages.EMPTY_TOMORROW
+            ),
         )
+        if tomorrow_lectures:
+            await context.bot.send_message(
+                chat_id=subscriber.chat_id,
+                text=messages.DATE_TEMPLATE.format(date=tomorrow_date)
+                + "\n".join(
+                    [
+                        messages.LECTURE_BASE_TEMPLATE.format(
+                            date=lecture.date_time,
+                            name=lecture.name,
+                            event_type="Практика" if lecture.is_practice else "Лекция",
+                            cabinet=lecture.cabinet,
+                        )
+                        for lecture in tomorrow_lectures
+                    ]
+                ),
+            )
 
 
 async def notify_about_upcoming_lecture(context: ContextTypes.DEFAULT_TYPE) -> None:
