@@ -22,7 +22,7 @@ async def next(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         if not next_lecture:
             return
 
-        message = messages.LECTURE_TEMPLATE.format(
+        message = messages.LECTURE_VERBOSE_TEMPLATE.format(
             date=next_lecture.date_time.strftime("%d %b (%a)"),
             time=next_lecture.date_time.strftime("%H:%M"),
             name=next_lecture.discipline.name,
