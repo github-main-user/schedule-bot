@@ -2,10 +2,11 @@ from datetime import date, datetime
 from typing import Sequence
 
 from sqlalchemy import func, select
+from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from src.models.schedule import Lecture
+from src.models.schedule import Discipline, Lecture, Teacher
 
 
 class ScheduleRepository:
@@ -53,3 +54,66 @@ class ScheduleRepository:
         stmt = select(Lecture).options(*self.LECTURE_PRELOAD_OPTIONS).filter(Lecture.date_time == dt)
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
+
+    async def upsert_teacher(self, teacher_data: dict) -> Teacher:
+        """
+        Creates a new teacher or updates an existing record.
+        Returns that created/updated object.
+        """
+        stmt = pg_insert(Teacher).values(
+            lastname=teacher_data["lastname"],
+            firstname=teacher_data["firstname"],
+            patronymic=teacher_data["patronymic"],
+            birthday=teacher_data["birthday"],
+        )
+        stmt = stmt.on_conflict_do_update(
+            index_elements=["lastname", "firstname", "patronymic"],
+            set_={
+                "lastname": stmt.excluded.lastname,
+                "firstname": stmt.excluded.firstname,
+                "patronymic": stmt.excluded.patronymic,
+                "birthday": stmt.excluded.birthday,
+            },
+        ).returning(Teacher)
+
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
+
+    async def upsert_discipline(self, discipline_data: dict) -> Discipline:
+        """
+        Creates a new discipline or updates an existing record.
+        Returns that created/updated object.
+        """
+        stmt = pg_insert(Discipline).values(name=discipline_data["name"])
+        stmt = stmt.on_conflict_do_update(
+            index_elements=["name"],
+            set_={"name": stmt.excluded.name},
+        ).returning(Discipline)
+
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
+
+    async def upsert_lecture(self, lecture_data: dict) -> Lecture:
+        """
+        Creates a new lecture or updates an existing record.
+        Returns that created/updated object.
+        """
+        stmt = pg_insert(Lecture).values(
+            date_time=lecture_data["date_time"],
+            cabinet=lecture_data["cabinet"],
+            is_practice=lecture_data["is_practice"],
+            discipline_id=lecture_data["discipline_id"],
+            teacher_id=lecture_data["teacher_id"],
+        )
+        stmt = stmt.on_conflict_do_update(
+            index_elements=["date_time"],
+            set_={
+                "cabinet": stmt.excluded.cabinet,
+                "is_practice": stmt.excluded.is_practice,
+                "discipline_id": stmt.excluded.discipline_id,
+                "teacher_id": stmt.excluded.teacher_id,
+            },
+        )
+
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
