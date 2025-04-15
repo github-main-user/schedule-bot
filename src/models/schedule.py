@@ -47,7 +47,7 @@ class Lecture(Base):
     __tablename__ = "lectures"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    date_time: Mapped[datetime] = mapped_column(unique=True)
+    date_time: Mapped[datetime] = mapped_column(unique=True, index=True)
     discipline_id: Mapped[int] = mapped_column(ForeignKey("disciplines.id"))
     teacher_id: Mapped[int] = mapped_column(ForeignKey("teachers.id"))
     cabinet: Mapped[str]
