@@ -1,24 +1,24 @@
 HELP = """\
-It is a bot for the SKSI institute.
-Bot fetches and shows schedule for the "ИТБ-24" group.
-Bot will update schedule every day at {update_time:%H:%M}, and notify you about every lecture at {minutes_before} minutes before it starts.
+This bot is for the SKSI institute.
+It fetches and displays the schedule for the "ИТБ-24" group.
+The schedule is updated daily at {update_time:%H:%M}, and you will be notified {minutes_before} minutes before each lecture begins.
 
 Available commands:
 - /help - show this message
-- /start - start bot
-- /stop - stop bot
-- /next - get the nearest lecture"""
+- /start - start the bot
+- /stop - stop the bot
+- /next - get the next lecture"""
 
-SUBSCRIBED = "You are subscribed to receive info about upcoming lectures every day at {update_time:%H:%M}"
-UNSUBSCRIBED = "You are unsubscribed now"
+SUBSCRIBED = "You are now subscribed to daily updates at {update_time:%H:%M} for upcoming lectures"
+UNSUBSCRIBED = "You have unsubscribed from updates"
 ALREADY_SUBSCRIBED = "You are already subscribed"
 NOT_SUBSCRIBED = "You are not subscribed"
 
 EMPTY_TOMORROW = "There are no lectures tomorrow"
-TOMORROW_N_LECTURES = "Tomorrow will be {n} lecture(s)"
+TOMORROW_N_LECTURES = "There will be {n} lecture(s) tomorrow"
 
 DATE_TEMPLATE = "*{date:%d %b (%a)}*"
 
 LECTURE_BASE_TEMPLATE = "*{time:%H:%M}*: {discipline_name} ({event_type}) ({cabinet})"
 
-LECTURE_VERBOSE_TEMPLATE = LECTURE_BASE_TEMPLATE + "\n{teacher} ({age} yeard old)"
+LECTURE_VERBOSE_TEMPLATE = LECTURE_BASE_TEMPLATE + "\n{teacher} ({age} years old)"
