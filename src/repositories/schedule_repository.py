@@ -23,6 +23,7 @@ class ScheduleRepository:
                 selectinload(Lecture.teacher),
             )
             .filter(func.date(Lecture.date_time) == day)
+            .order_by(Lecture.date_time)
         )
         result = await self.session.execute(stmt)
         return result.scalars().all()
