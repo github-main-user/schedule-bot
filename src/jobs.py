@@ -1,3 +1,5 @@
+from datetime import datetime, time
+
 from telegram.ext import ContextTypes
 
 from src.db import get_session
@@ -44,14 +46,20 @@ async def daily_schedule_update(context: ContextTypes.DEFAULT_TYPE) -> None:
 async def notify_about_upcoming_lecture(context: ContextTypes.DEFAULT_TYPE) -> None:
     """
     Fetches a lecture for a specific time.
-    Notify all subscribed users about upcoming lecture.
+    If there is notifies all subscribed users about upcoming lecture.
     """
+    job = context.job
+    if not job:
+        return
+
+    lecture_time: time = job.data.get("original_time")  # type: ignore
+    exact_datetime = datetime.combine(date=datetime.today(), time=lecture_time)
+
     async with await get_session() as session:
         schedule_repo = ScheduleRepository(session)
         subscriber_repo = SubscriberRepository(session)
 
-        now = global_utils.get_local_now()
-        next_lecture = await schedule_repo.get_next_lecture_after(now)
+        next_lecture = await schedule_repo.get_lecture_by_datetime(exact_datetime)
 
         if not next_lecture:
             return

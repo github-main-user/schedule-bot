@@ -24,6 +24,7 @@ def setup_jobs(job_queue: JobQueue | None) -> None:
         job_queue.run_daily(
             jobs.notify_about_upcoming_lecture,
             time=subtract_minutes(time, settings.MINUTES_BEFORE_LECTURE),
+            data={"original_time": time},
         )
 
 

@@ -37,3 +37,19 @@ class ScheduleRepository:
         )
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
+
+    async def get_lecture_by_datetime(self, dt: datetime) -> Lecture | None:
+        """
+        Fetches a lecture with exact datetime which was given.
+        Returns either that lecture or None.
+        """
+        stmt = (
+            select(Lecture)
+            .options(
+                selectinload(Lecture.discipline),
+                selectinload(Lecture.teacher),
+            )
+            .filter(Lecture.date_time == dt)
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
