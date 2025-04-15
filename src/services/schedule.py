@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from sqlalchemy import insert, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
 from src.config import settings
