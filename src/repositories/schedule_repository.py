@@ -113,7 +113,7 @@ class ScheduleRepository:
                 "discipline_id": stmt.excluded.discipline_id,
                 "teacher_id": stmt.excluded.teacher_id,
             },
-        )
+        ).returning(Lecture)
 
         result = await self.session.execute(stmt)
         return result.scalar_one()
