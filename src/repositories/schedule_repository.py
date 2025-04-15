@@ -16,7 +16,14 @@ class ScheduleRepository:
 
     async def get_lectures_for_day(self, day: date) -> Sequence[Lecture]:
         """Returns a sequence of lectures for a given day."""
-        stmt = select(Lecture).filter(func.date(Lecture.date_time) == day)
+        stmt = (
+            select(Lecture)
+            .options(
+                selectinload(Lecture.discipline),
+                selectinload(Lecture.teacher),
+            )
+            .filter(func.date(Lecture.date_time) == day)
+        )
         result = await self.session.execute(stmt)
         return result.scalars().all()
 
