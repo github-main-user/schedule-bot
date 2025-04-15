@@ -11,6 +11,11 @@ from src.models.schedule import Lecture
 class ScheduleRepository:
     """Gives access to the data in Lecture, Teacher, and Discipline tables in database."""
 
+    LECTURE_PRELOAD_OPTIONS = (
+        selectinload(Lecture.discipline),
+        selectinload(Lecture.teacher),
+    )
+
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
@@ -18,10 +23,7 @@ class ScheduleRepository:
         """Returns a sequence of lectures for a given day."""
         stmt = (
             select(Lecture)
-            .options(
-                selectinload(Lecture.discipline),
-                selectinload(Lecture.teacher),
-            )
+            .options(*self.LECTURE_PRELOAD_OPTIONS)
             .filter(func.date(Lecture.date_time) == day)
             .order_by(Lecture.date_time)
         )
@@ -35,10 +37,7 @@ class ScheduleRepository:
         """
         stmt = (
             select(Lecture)
-            .options(
-                selectinload(Lecture.discipline),
-                selectinload(Lecture.teacher),
-            )
+            .options(*self.LECTURE_PRELOAD_OPTIONS)
             .filter(Lecture.date_time > dt)
             .order_by(Lecture.date_time)
             .limit(1)
@@ -51,13 +50,6 @@ class ScheduleRepository:
         Fetches a lecture with exact datetime which was given.
         Returns either that lecture or None.
         """
-        stmt = (
-            select(Lecture)
-            .options(
-                selectinload(Lecture.discipline),
-                selectinload(Lecture.teacher),
-            )
-            .filter(Lecture.date_time == dt)
-        )
+        stmt = select(Lecture).options(*self.LECTURE_PRELOAD_OPTIONS).filter(Lecture.date_time == dt)
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
