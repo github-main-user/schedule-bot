@@ -1,21 +1,6 @@
-import requests
-
-from src.config import settings
 from src.models.schedule import Lecture
 
 from . import messages
-
-
-def request_raw_schedule() -> list:
-    """
-    Fetches the remote schedule url of which is specified in settings.
-    Raises error for status.
-    Returns a list of lectures (which are dictionaries).
-    """
-    r = requests.get(url=settings.SCHEDULE_URL, timeout=5)
-    r.raise_for_status()
-
-    return r.json().get("scheduleChanges", [])
 
 
 def format_lecture(lecture: Lecture) -> str:

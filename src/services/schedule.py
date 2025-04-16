@@ -1,12 +1,37 @@
 import logging
 from datetime import datetime
+from typing import Any
+
+import requests
 
 from src.config import settings
 from src.db import get_session
 from src.repositories.schedule_repository import ScheduleRepository
-from src.utils import schedule_utils
 
 logger = logging.getLogger(__name__)
+
+
+def fetch_schedule() -> list[dict[str, Any]]:
+    """
+    Fetches remote schedule, url of which is specified in settings.
+    Returns a list of lectures (which are dictionaries).
+    In case of an error returns an empty list.
+    """
+    logger.info("Requesting remote schedule from %s", settings.SCHEDULE_URL)
+
+    raw_lectures = []
+    try:
+        r = requests.get(url=settings.SCHEDULE_URL, timeout=5)
+        r.raise_for_status()
+
+        parsed_result = r.json().get("scheduleChanges", [])
+        if isinstance(parsed_result, list):
+            raw_lectures = parsed_result
+    except requests.exceptions.RequestException as e:
+        logging.error("Error during request: %s", e)
+    finally:
+        logger.info("Fetched %d lectures", len(raw_lectures))
+        return raw_lectures
 
 
 async def update_schedule():
@@ -16,8 +41,7 @@ async def update_schedule():
     session = await get_session()
     repo = ScheduleRepository(session)
 
-    raw_lectures = schedule_utils.request_raw_schedule()
-    logger.info("Fetched %d lectures", len(raw_lectures))
+    raw_lectures = fetch_schedule()
 
     for raw_lecture in raw_lectures:
 
