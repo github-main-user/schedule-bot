@@ -1,9 +1,12 @@
+import logging
 from typing import Sequence
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.models.subscribers import Subscriber
+
+logger = logging.getLogger(__name__)
 
 
 class SubscriberRepository:
@@ -17,12 +20,17 @@ class SubscriberRepository:
         new_subscriber = Subscriber(chat_id=chat_id)
         self.session.add(new_subscriber)
         await self.session.commit()
+        logger.info("Subscriber created with chat_id=%s", chat_id)
 
     async def delete(self, chat_id: int) -> None:
         """Deletes a subscriber from the table by given `chat_id`."""
-        result = await self.get_by_chat_id(chat_id)
-        await self.session.delete(result)
+        subscriber = await self.get_by_chat_id(chat_id)
+        if subscriber is None:
+            logger.warning("Tried to delete a non-existing subscriber with chat_id=%s", chat_id)
+            return
+        await self.session.delete(subscriber)
         await self.session.commit()
+        logger.info("Subscriber deleted with chat_id=%s", chat_id)
 
     async def exists(self, chat_id: int) -> bool:
         """Checks if a subscriber with given `chat_id` exists."""

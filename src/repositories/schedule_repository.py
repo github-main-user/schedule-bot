@@ -1,3 +1,4 @@
+import logging
 from datetime import date, datetime
 from typing import Sequence
 
@@ -7,6 +8,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from src.models.schedule import Discipline, Lecture, Teacher
+
+logger = logging.getLogger(__name__)
 
 
 class ScheduleRepository:
@@ -77,7 +80,9 @@ class ScheduleRepository:
         ).returning(Teacher)
 
         result = await self.session.execute(stmt)
-        return result.scalar_one()
+        teacher = result.scalar_one()
+        logger.info("Upserted teacher: %s (%s)", teacher.initials, teacher.birthday)
+        return teacher
 
     async def upsert_discipline(self, discipline_data: dict) -> Discipline:
         """
@@ -91,7 +96,9 @@ class ScheduleRepository:
         ).returning(Discipline)
 
         result = await self.session.execute(stmt)
-        return result.scalar_one()
+        discipline = result.scalar_one()
+        logger.info("Upserted discipline: %s", discipline.name)
+        return discipline
 
     async def upsert_lecture(self, lecture_data: dict) -> Lecture:
         """
@@ -116,4 +123,12 @@ class ScheduleRepository:
         ).returning(Lecture)
 
         result = await self.session.execute(stmt)
-        return result.scalar_one()
+        lecture = result.scalar_one()
+        logger.info(
+            "Upserted lecture at (cabinet: %s, discipline_id: %s, teacher_id: %s)",
+            lecture.date_time,
+            lecture.cabinet,
+            lecture.discipline_id,
+            lecture.teacher_id,
+        )
+        return lecture
