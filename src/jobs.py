@@ -17,7 +17,7 @@ async def daily_schedule_update(context: ContextTypes.DEFAULT_TYPE) -> None:
     Updates the local schedule.
     Notifies all subscribed users about tomorrow lectures.
     """
-    logger.info("Daily schedule update is being called")
+    logger.info("Starting daily update job")
 
     await update_schedule()
 
@@ -55,9 +55,11 @@ async def notify_about_upcoming_lecture(context: ContextTypes.DEFAULT_TYPE) -> N
     Fetches a lecture for a specific time.
     If there is notifies all subscribed users about upcoming lecture.
     """
+    logger.info("Starting per lecture job")
+
     job = context.job
     if not job:
-        logger.warning("Job is None")
+        logger.warning("Job is None, leaving")
         return
 
     lecture_time: time = job.data.get("original_time")  # type: ignore
