@@ -14,6 +14,7 @@ logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 
 def setup_jobs(job_queue: JobQueue | None) -> None:
+    """Sets up all of bot's jobs."""
     if job_queue is None:
         logging.error("job queue is None")
         return
