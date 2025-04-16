@@ -125,7 +125,7 @@ class ScheduleRepository:
         result = await self.session.execute(stmt)
         lecture = result.scalar_one()
         logger.info(
-            "Upserted lecture at (cabinet: %s, discipline_id: %s, teacher_id: %s)",
+            "Upserted lecture at %s (cabinet: %s, discipline_id: %d, teacher_id: %d)",
             lecture.date_time,
             lecture.cabinet,
             lecture.discipline_id,
