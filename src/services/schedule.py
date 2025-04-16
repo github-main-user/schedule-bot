@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 
 from src.config import settings
@@ -5,13 +6,18 @@ from src.db import get_session
 from src.repositories.schedule_repository import ScheduleRepository
 from src.utils import schedule_utils
 
+logger = logging.getLogger(__name__)
+
 
 async def update_schedule():
     """Fetches the remote schedule and appends it to local database."""
+    logger.info("Starting schedule update")
+
     session = await get_session()
     repo = ScheduleRepository(session)
 
     raw_lectures = schedule_utils.request_raw_schedule()
+    logger.info("Fetched %d lectures", len(raw_lectures))
 
     for raw_lecture in raw_lectures:
 
@@ -50,3 +56,4 @@ async def update_schedule():
         await repo.upsert_lecture(lecture_data)
 
     await session.commit()
+    logger.info("Schedule update completed successfully")
