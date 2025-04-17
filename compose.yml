@@ -11,7 +11,7 @@ services:
 
   bot:
     build: .
-    command: alembic upgrade head && python main.py
+    command: bash -c "alembic upgrade head && python main.py"
     depends_on:
       - db
 
