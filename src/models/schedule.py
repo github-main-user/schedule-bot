@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from sqlalchemy import ForeignKey, UniqueConstraint
+from sqlalchemy import DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.config import settings
@@ -47,7 +47,7 @@ class Lecture(Base):
     __tablename__ = "lectures"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    date_time: Mapped[datetime] = mapped_column(unique=True, index=True)
+    date_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), unique=True, index=True)
     discipline_id: Mapped[int] = mapped_column(ForeignKey("disciplines.id"))
     teacher_id: Mapped[int] = mapped_column(ForeignKey("teachers.id"))
     cabinet: Mapped[str]
