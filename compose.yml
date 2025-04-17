@@ -1,0 +1,18 @@
+services:
+  db:
+    image: postgres:latest
+    environment: 
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  bot:
+    build: .
+    command: alembic upgrade head && python main.py
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
