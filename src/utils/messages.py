@@ -17,8 +17,8 @@ NOT_SUBSCRIBED = "You are not subscribed"
 EMPTY_TOMORROW = "There are no lectures tomorrow"
 TOMORROW_N_LECTURES = "There will be {n} lecture(s) tomorrow"
 
+NO_NEXT_LECTURE = "There is no next lecture"
+
 DATE_TEMPLATE = "*{date:%d %b (%a)}*"
-
 LECTURE_BASE_TEMPLATE = "*{time:%H:%M}*: {discipline_name} ({event_type}) ({cabinet})"
-
 LECTURE_VERBOSE_TEMPLATE = LECTURE_BASE_TEMPLATE + "\n{teacher} ({age} years old)"
