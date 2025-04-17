@@ -40,11 +40,15 @@ async def daily_schedule_update(context: ContextTypes.DEFAULT_TYPE) -> None:
             ),
         )
         if tomorrow_lectures:
-            formatted_lectures = "\n".join([schedule_utils.format_lecture(lecture) for lecture in tomorrow_lectures])
-
+            message = "\n".join(
+                (
+                    messages.DATE_TEMPLATE.format(date=tomorrow_date),
+                    *map(schedule_utils.format_lecture, tomorrow_lectures),
+                )
+            )
             await context.bot.send_message(
                 chat_id=subscriber.chat_id,
-                text=(messages.DATE_TEMPLATE.format(date=tomorrow_date) + "\n" + formatted_lectures),
+                text=message,
             )
 
         logger.info("Subscribed user %s was notified about tomorrow lectures", subscriber.chat_id)

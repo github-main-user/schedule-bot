@@ -29,7 +29,14 @@ async def next(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         now = global_utils.get_local_now()
         next_lecture = await repo.get_next_lecture_after(now)
 
-    message = schedule_utils.format_lecture_verbose(next_lecture) if next_lecture else messages.NO_NEXT_LECTURE
+        message = (
+            f"{messages.DATE_TEMPLATE.format(date=next_lecture.date_time)}"
+            "\n"
+            f"{schedule_utils.format_lecture_verbose(next_lecture)}"
+            if next_lecture
+            else messages.NO_NEXT_LECTURE
+        )
+
     await context.bot.send_message(chat_id=chat_id, text=message, parse_mode="Markdown")
 
 
