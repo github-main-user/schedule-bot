@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 import logging
 
 from telegram.ext import ApplicationBuilder, JobQueue
