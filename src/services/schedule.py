@@ -68,7 +68,7 @@ async def update_schedule():
         lecture_datetime = datetime.combine(
             date=datetime.fromisoformat(raw_lecture["date"]).date(),
             time=settings.SCHEDULE_TIMES[raw_lecture["lessonId"] - 1],
-        )
+        ).replace(tzinfo=settings.TIMEZONE)
 
         lecture_data = {
             "date_time": lecture_datetime,
