@@ -5,7 +5,7 @@ from telegram.ext import CommandHandler, ContextTypes
 
 from src.db import get_session
 from src.repositories.schedule_repository import ScheduleRepository
-from src.utils import global_utils, schedule_utils
+from src.utils import global_utils, messages, schedule_utils
 
 logger = logging.getLogger(__name__)
 
@@ -28,15 +28,9 @@ async def next(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
         now = global_utils.get_local_now()
         next_lecture = await repo.get_next_lecture_after(now)
-        if not next_lecture:
-            logger.info("There is no next lecture in schedule")
-            return
 
-    await context.bot.send_message(
-        chat_id=chat_id,
-        text=schedule_utils.format_lecture_verbose(next_lecture),
-        parse_mode="Markdown",
-    )
+    message = schedule_utils.format_lecture_verbose(next_lecture) if next_lecture else messages.NO_NEXT_LECTURE
+    await context.bot.send_message(chat_id=chat_id, text=message, parse_mode="Markdown")
 
 
 schedule_handlers = [CommandHandler("next", next)]
