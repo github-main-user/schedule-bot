@@ -71,7 +71,7 @@ async def update_schedule():
         ).replace(tzinfo=settings.TIMEZONE)
 
         lecture_data = {
-            "date_time": lecture_datetime,
+            "starts_at": lecture_datetime,
             "cabinet": cabinet,
             "is_practice": raw_lecture["eventType"]["name"] != "Лекция",
             "discipline_id": discipline.id,

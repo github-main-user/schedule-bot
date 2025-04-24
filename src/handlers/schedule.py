@@ -30,7 +30,7 @@ async def next(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         next_lecture = await repo.get_next_lecture_after(now)
 
         message = (
-            f"{messages.DATE_TEMPLATE.format(date=next_lecture.date_time)}"
+            f"{messages.DATE_TEMPLATE.format(date=next_lecture.starts_at)}"
             "\n"
             f"{schedule_utils.format_lecture_verbose(next_lecture)}"
             if next_lecture

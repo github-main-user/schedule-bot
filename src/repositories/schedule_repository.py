@@ -28,8 +28,8 @@ class ScheduleRepository:
         stmt = (
             select(Lecture)
             .options(*self.LECTURE_PRELOAD_OPTIONS)
-            .filter(func.date(Lecture.date_time) == day)
-            .order_by(Lecture.date_time)
+            .filter(func.date(Lecture.starts_at) == day)
+            .order_by(Lecture.starts_at)
         )
         result = await self.session.execute(stmt)
         return result.scalars().all()
@@ -42,8 +42,8 @@ class ScheduleRepository:
         stmt = (
             select(Lecture)
             .options(*self.LECTURE_PRELOAD_OPTIONS)
-            .filter(Lecture.date_time > dt)
-            .order_by(Lecture.date_time)
+            .filter(Lecture.starts_at > dt)
+            .order_by(Lecture.starts_at)
             .limit(1)
         )
         result = await self.session.execute(stmt)
@@ -54,7 +54,7 @@ class ScheduleRepository:
         Fetches a lecture with exact datetime which was given.
         Returns either that lecture or None.
         """
-        stmt = select(Lecture).options(*self.LECTURE_PRELOAD_OPTIONS).filter(Lecture.date_time == dt)
+        stmt = select(Lecture).options(*self.LECTURE_PRELOAD_OPTIONS).filter(Lecture.starts_at == dt)
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
@@ -106,14 +106,14 @@ class ScheduleRepository:
         Returns that created/updated object.
         """
         stmt = pg_insert(Lecture).values(
-            date_time=lecture_data["date_time"],
+            starts_at=lecture_data["starts_at"],
             cabinet=lecture_data["cabinet"],
             is_practice=lecture_data["is_practice"],
             discipline_id=lecture_data["discipline_id"],
             teacher_id=lecture_data["teacher_id"],
         )
         stmt = stmt.on_conflict_do_update(
-            index_elements=["date_time"],
+            index_elements=["starts_at"],
             set_={
                 "cabinet": stmt.excluded.cabinet,
                 "is_practice": stmt.excluded.is_practice,
@@ -126,7 +126,7 @@ class ScheduleRepository:
         lecture = result.scalar_one()
         logger.info(
             "Upserted lecture at %s (cabinet: %s, discipline_id: %d, teacher_id: %d)",
-            lecture.date_time,
+            lecture.starts_at,
             lecture.cabinet,
             lecture.discipline_id,
             lecture.teacher_id,
