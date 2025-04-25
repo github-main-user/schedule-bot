@@ -38,7 +38,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """
     Handles /stop command.
-    Unsubscribes user it it is subscribed.
+    Unsubscribes user if it is subscribed.
     """
     if update.effective_chat is None:
         logger.warning("Effective chat is None")
