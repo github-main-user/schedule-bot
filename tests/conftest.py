@@ -18,6 +18,13 @@ def mock_context() -> MagicMock:
     return context
 
 
+@pytest.fixture
+def mock_update() -> MagicMock:
+    update = MagicMock()
+    update.effective_chat.id = MagicMock(return_value=1)
+    return update
+
+
 # Models
 
 
