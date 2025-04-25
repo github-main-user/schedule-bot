@@ -6,22 +6,18 @@ from telegram.ext import CommandHandler, ContextTypes
 from src.db import get_session
 from src.repositories.schedule_repository import ScheduleRepository
 from src.utils import global_utils, messages, schedule_utils
+from src.utils.bot_utils import with_chat_id
 
 logger = logging.getLogger(__name__)
 
 
-async def next(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+@with_chat_id
+async def next(chat_id: int, _update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """
     Handles /next command.
     Fetches the nearest lecture and prints it to the user.
     Works both for subscribed and unsubscribed users.
     """
-    if update.effective_chat is None:
-        logger.warning("Effective chat is None")
-        return
-    chat_id = update.effective_chat.id
-
-    logger.info("User %s requested the next lecture", chat_id)
 
     async with await get_session() as session:
         repo = ScheduleRepository(session)
