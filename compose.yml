@@ -11,6 +11,8 @@ services:
 
   bot:
     build: .
+    env_file:
+      - .env
     command: bash -c "alembic upgrade head && python main.py"
     depends_on:
       - db
