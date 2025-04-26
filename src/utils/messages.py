@@ -7,7 +7,8 @@ Available commands:
 - /help - show this message
 - /start - start the bot
 - /stop - stop the bot
-- /next - get the next lecture"""
+- /next - get the next lecture
+- /today - get today lectures"""
 
 SUBSCRIBED = "You are now subscribed to daily updates at {update_time:%H:%M} for upcoming lectures"
 UNSUBSCRIBED = "You have unsubscribed from updates"
