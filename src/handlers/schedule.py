@@ -1,4 +1,5 @@
 import logging
+from datetime import date
 
 from telegram import Update
 from telegram.ext import CommandHandler, ContextTypes
@@ -15,7 +16,7 @@ logger = logging.getLogger(__name__)
 async def next(chat_id: int, _update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """
     Handles /next command.
-    Fetches the nearest lecture and prints it to the user.
+    Fetches the nearest lecture and prints it to user.
     Works both for subscribed and unsubscribed users.
     """
 
@@ -36,4 +37,32 @@ async def next(chat_id: int, _update: Update, context: ContextTypes.DEFAULT_TYPE
     await context.bot.send_message(chat_id=chat_id, text=message, parse_mode="Markdown")
 
 
-schedule_handlers = [CommandHandler("next", next)]
+@with_chat_id
+async def today(chat_id: int, _update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    Handles /today command.
+    Fetches the today lectures and prints it to user.
+    Works both for subscribed and unsubscribed users.
+    """
+
+    async with await get_session() as session:
+        repo = ScheduleRepository(session)
+
+        today_date = date.today()
+        today_lectures = await repo.get_lectures_for_day(today_date)
+
+        message = (
+            "\n".join(
+                (
+                    messages.DATE_TEMPLATE.format(date=today_date),
+                    *map(schedule_utils.format_lecture, today_lectures),
+                )
+            )
+            if today_lectures
+            else messages.EMPTY_TODAY
+        )
+
+    await context.bot.send_message(chat_id=chat_id, text=message, parse_mode="Markdown")
+
+
+schedule_handlers = [CommandHandler("next", next), CommandHandler("today", today)]
