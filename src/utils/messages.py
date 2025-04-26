@@ -14,6 +14,7 @@ UNSUBSCRIBED = "You have unsubscribed from updates"
 ALREADY_SUBSCRIBED = "You are already subscribed"
 NOT_SUBSCRIBED = "You are not subscribed"
 
+EMPTY_TODAY = "There are no lectures today"
 EMPTY_TOMORROW = "There are no lectures tomorrow"
 TOMORROW_N_LECTURES = "There will be {n} lecture(s) tomorrow"
 
