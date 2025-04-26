@@ -1,4 +1,5 @@
 import logging
+import pprint
 
 from telegram import Update
 from telegram.ext import CommandHandler, ContextTypes
@@ -25,4 +26,19 @@ async def help(chat_id: int, _update: Update, context: ContextTypes.DEFAULT_TYPE
     await context.bot.send_message(chat_id=chat_id, text=message)
 
 
-special_handlers = [CommandHandler("help", help)]
+@with_chat_id
+async def status(chat_id: int, _update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    Handles /status command.
+    Prints currently active jobs to user.
+    """
+
+    jobs = context.job_queue.jobs() if context.job_queue else []
+
+    await context.bot.send_message(chat_id=chat_id, text=pprint.pformat(jobs))
+
+
+special_handlers = [
+    CommandHandler("help", help),
+    CommandHandler("status", status),
+]
