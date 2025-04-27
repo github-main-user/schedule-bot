@@ -10,7 +10,9 @@ from src.handlers.special import special_handlers
 from src.handlers.subscribers import command_handlers
 from src.utils.global_utils import subtract_minutes
 
-logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+)
 
 
 def setup_jobs(job_queue: JobQueue | None) -> None:

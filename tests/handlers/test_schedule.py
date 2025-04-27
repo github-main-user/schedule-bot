@@ -14,7 +14,9 @@ def mock_get_session():
 
 @pytest.fixture
 def mock_schedule_repo():
-    with patch("src.handlers.schedule.ScheduleRepository", autospec=True) as mock_schedule_repo:
+    with patch(
+        "src.handlers.schedule.ScheduleRepository", autospec=True
+    ) as mock_schedule_repo:
         yield mock_schedule_repo
 
 
@@ -38,11 +40,15 @@ async def test_next_success(
     mock_context: MagicMock,
     lecture: Lecture,
 ) -> None:
-    mock_schedule_repo.return_value.get_next_lecture_after = AsyncMock(return_value=lecture)
+    mock_schedule_repo.return_value.get_next_lecture_after = AsyncMock(
+        return_value=lecture
+    )
 
     await next(mock_update, mock_context)
 
     mock_get_session.assert_awaited_once()
-    mock_schedule_repo.assert_called_once_with(mock_get_session.return_value.__aenter__.return_value)
+    mock_schedule_repo.assert_called_once_with(
+        mock_get_session.return_value.__aenter__.return_value
+    )
     mock_schedule_repo.return_value.get_next_lecture_after.assert_awaited_once()
     mock_context.bot.send_message.assert_awaited_once()

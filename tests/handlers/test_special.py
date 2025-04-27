@@ -6,7 +6,9 @@ from src.handlers.special import help
 
 
 @pytest.mark.asyncio
-async def test_help_no_effective_chat(mock_update: MagicMock, mock_context: MagicMock) -> None:
+async def test_help_no_effective_chat(
+    mock_update: MagicMock, mock_context: MagicMock
+) -> None:
     mock_update.effective_chat = None
 
     await help(mock_update, mock_context)

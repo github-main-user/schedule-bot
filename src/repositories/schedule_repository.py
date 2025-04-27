@@ -54,7 +54,11 @@ class ScheduleRepository:
         Fetches a lecture with exact datetime which was given.
         Returns either that lecture or None.
         """
-        stmt = select(Lecture).options(*self.LECTURE_PRELOAD_OPTIONS).filter(Lecture.starts_at == dt)
+        stmt = (
+            select(Lecture)
+            .options(*self.LECTURE_PRELOAD_OPTIONS)
+            .filter(Lecture.starts_at == dt)
+        )
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 

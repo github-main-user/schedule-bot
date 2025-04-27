@@ -54,7 +54,9 @@ async def test_daily_schedule_update_with_lectures(
     # prepare
     session_obj = mock_get_session.return_value.__aenter__.return_value
 
-    mock_schedule_repo.return_value.get_lectures_for_day = AsyncMock(return_value=lectures)
+    mock_schedule_repo.return_value.get_lectures_for_day = AsyncMock(
+        return_value=lectures
+    )
     mock_subscriber_repo.return_value.get_all = AsyncMock(return_value=subscribers)
 
     # actual call
@@ -118,7 +120,9 @@ async def test_daily_schedule_update_without_subscribers(
     # prepare
     session_obj = mock_get_session.return_value.__aenter__.return_value
 
-    mock_schedule_repo.return_value.get_lectures_for_day = AsyncMock(return_value=lectures)
+    mock_schedule_repo.return_value.get_lectures_for_day = AsyncMock(
+        return_value=lectures
+    )
     mock_subscriber_repo.return_value.get_all = AsyncMock()
 
     # actual call
@@ -176,7 +180,9 @@ async def test_notify_about_upcoming_lecture_success(
     mock_context.job = MagicMock()
     mock_context.job.data = {"original_time": time(15, 30)}
 
-    mock_schedule_repo.return_value.get_lecture_by_datetime = AsyncMock(return_value=lecture)
+    mock_schedule_repo.return_value.get_lecture_by_datetime = AsyncMock(
+        return_value=lecture
+    )
     mock_subscriber_repo.return_value.get_all = AsyncMock(return_value=subscribers)
 
     # actual call
@@ -205,7 +211,9 @@ async def test_notify_about_upcoming_lecture_no_next(
     mock_context.job = MagicMock()
     mock_context.job.data = {"original_time": time(15, 30)}
 
-    mock_schedule_repo.return_value.get_lecture_by_datetime = AsyncMock(return_value=None)
+    mock_schedule_repo.return_value.get_lecture_by_datetime = AsyncMock(
+        return_value=None
+    )
     mock_subscriber_repo.return_value.get_all = AsyncMock(return_value=subscribers)
 
     # actual call
@@ -235,7 +243,9 @@ async def test_notify_about_upcoming_lecture_no_subscribers(
     mock_context.job = MagicMock()
     mock_context.job.data = {"original_time": time(15, 30)}
 
-    mock_schedule_repo.return_value.get_lecture_by_datetime = AsyncMock(return_value=lecture)
+    mock_schedule_repo.return_value.get_lecture_by_datetime = AsyncMock(
+        return_value=lecture
+    )
     mock_subscriber_repo.return_value.get_all = AsyncMock(return_value=[])
 
     # actual call

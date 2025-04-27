@@ -26,7 +26,9 @@ class SubscriberRepository:
         """Deletes a subscriber from the table by given `chat_id`."""
         subscriber = await self.get_by_chat_id(chat_id)
         if subscriber is None:
-            logger.warning("Tried to delete a non-existing subscriber with chat_id=%s", chat_id)
+            logger.warning(
+                "Tried to delete a non-existing subscriber with chat_id=%s", chat_id
+            )
             return
         await self.session.delete(subscriber)
         await self.session.commit()

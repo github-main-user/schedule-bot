@@ -10,7 +10,11 @@ from src.utils import global_utils
 
 class Teacher(Base):
     __tablename__ = "teachers"
-    __table_args__ = (UniqueConstraint("lastname", "firstname", "patronymic", name="uq_teacher_fullname"),)
+    __table_args__ = (
+        UniqueConstraint(
+            "lastname", "firstname", "patronymic", name="uq_teacher_fullname"
+        ),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
     lastname: Mapped[str]
@@ -28,7 +32,9 @@ class Teacher(Base):
 
     @property
     def age(self) -> int:
-        birthday_combined = datetime.combine(self.birthday, datetime.min.time(), tzinfo=settings.TIMEZONE)
+        birthday_combined = datetime.combine(
+            self.birthday, datetime.min.time(), tzinfo=settings.TIMEZONE
+        )
 
         now = global_utils.get_local_now()
         delta_age = now - birthday_combined
@@ -47,7 +53,9 @@ class Lecture(Base):
     __tablename__ = "lectures"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    starts_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), unique=True, index=True)
+    starts_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), unique=True, index=True
+    )
     discipline_id: Mapped[int] = mapped_column(ForeignKey("disciplines.id"))
     teacher_id: Mapped[int] = mapped_column(ForeignKey("teachers.id"))
     cabinet: Mapped[str]

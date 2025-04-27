@@ -51,7 +51,10 @@ async def daily_schedule_update(context: ContextTypes.DEFAULT_TYPE) -> None:
                 text=message,
             )
 
-        logger.info("Subscribed user %s was notified about tomorrow lectures", subscriber.chat_id)
+        logger.info(
+            "Subscribed user %s was notified about tomorrow lectures",
+            subscriber.chat_id,
+        )
 
 
 async def notify_about_upcoming_lecture(context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -73,7 +76,9 @@ async def notify_about_upcoming_lecture(context: ContextTypes.DEFAULT_TYPE) -> N
         schedule_repo = ScheduleRepository(session)
         subscriber_repo = SubscriberRepository(session)
 
-        next_lecture = await schedule_repo.get_lecture_by_datetime(exact_lecture_datetime)
+        next_lecture = await schedule_repo.get_lecture_by_datetime(
+            exact_lecture_datetime
+        )
 
         if not next_lecture:
             logger.info("There is no lecture at %s, leaving", exact_lecture_datetime)
@@ -86,4 +91,6 @@ async def notify_about_upcoming_lecture(context: ContextTypes.DEFAULT_TYPE) -> N
             chat_id=subscriber.chat_id,
             text=schedule_utils.format_lecture_verbose(next_lecture),
         )
-        logger.info("Subscribed user %s was notified about upcoming lecture", subscriber.chat_id)
+        logger.info(
+            "Subscribed user %s was notified about upcoming lecture", subscriber.chat_id
+        )

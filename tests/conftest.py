@@ -45,7 +45,12 @@ def subscriber(subscribers: list[Subscriber]) -> Subscriber:
 @pytest.fixture
 def lectures() -> list[Lecture]:
     discipline = Discipline(name="Test Discipline")
-    teacher = Teacher(firstname="FirstName", lastname="LastName", patronymic="PatroNymic", birthday=date(1989, 11, 11))
+    teacher = Teacher(
+        firstname="FirstName",
+        lastname="LastName",
+        patronymic="PatroNymic",
+        birthday=date(1989, 11, 11),
+    )
     return [
         Lecture(
             id=1,

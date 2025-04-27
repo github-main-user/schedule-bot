@@ -13,7 +13,9 @@ logger = logging.getLogger(__name__)
 
 
 @with_chat_id
-async def next(chat_id: int, _update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def next(
+    chat_id: int, _update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> None:
     """
     Handles /next command.
     Fetches the nearest lecture and prints it to user.
@@ -38,7 +40,9 @@ async def next(chat_id: int, _update: Update, context: ContextTypes.DEFAULT_TYPE
 
 
 @with_chat_id
-async def today(chat_id: int, _update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def today(
+    chat_id: int, _update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> None:
     """
     Handles /today command.
     Fetches the today lectures and prints it to user.

@@ -12,7 +12,9 @@ logger = logging.getLogger(__name__)
 
 
 @with_chat_id
-async def help(chat_id: int, _update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def help(
+    chat_id: int, _update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> None:
     """
     Handles /help command.
     Prints help message to the user.
@@ -27,7 +29,9 @@ async def help(chat_id: int, _update: Update, context: ContextTypes.DEFAULT_TYPE
 
 
 @with_chat_id
-async def status(chat_id: int, _update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def status(
+    chat_id: int, _update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> None:
     """
     Handles /status command.
     Prints currently active jobs to user.

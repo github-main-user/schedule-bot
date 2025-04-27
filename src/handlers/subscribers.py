@@ -13,7 +13,9 @@ logger = logging.getLogger(__name__)
 
 
 @with_chat_id
-async def start(chat_id: int, _update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def start(
+    chat_id: int, _update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> None:
     """
     Handles /start command.
     Subscribes user if it is not already subscribed.
@@ -28,13 +30,17 @@ async def start(chat_id: int, _update: Update, context: ContextTypes.DEFAULT_TYP
         else:
             await repo.create(chat_id)
             logger.info("User %s subscribed successfully", chat_id)
-            message = messages.SUBSCRIBED.format(update_time=settings.SCHEDULE_UPDATE_TIME)
+            message = messages.SUBSCRIBED.format(
+                update_time=settings.SCHEDULE_UPDATE_TIME
+            )
 
     await context.bot.send_message(chat_id=chat_id, text=message)
 
 
 @with_chat_id
-async def stop(chat_id: int, _update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def stop(
+    chat_id: int, _update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> None:
     """
     Handles /stop command.
     Unsubscribes user if it is subscribed.
