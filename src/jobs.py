@@ -1,9 +1,11 @@
 import logging
 from datetime import datetime, time
+from typing import cast
 
 from telegram.ext import ContextTypes
 
 from src.db import get_session
+from src.models.schedule import Lecture
 from src.repositories.schedule_repository import ScheduleRepository
 from src.repositories.subscriber_repository import SubscriberRepository
 from src.services.schedule import update_schedule
@@ -40,15 +42,9 @@ async def daily_schedule_update(context: ContextTypes.DEFAULT_TYPE) -> None:
             ),
         )
         if tomorrow_lectures:
-            message = "\n".join(
-                (
-                    messages.DATE_TEMPLATE.format(date=tomorrow_date),
-                    *map(schedule_utils.format_lecture, tomorrow_lectures),
-                )
-            )
             await context.bot.send_message(
                 chat_id=subscriber.chat_id,
-                text=message,
+                text=schedule_utils.format_lectures_by_their_dates(tomorrow_lectures),
             )
 
         logger.info(

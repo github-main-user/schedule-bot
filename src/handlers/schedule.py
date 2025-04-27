@@ -5,6 +5,7 @@ from telegram import Update
 from telegram.ext import CommandHandler, ContextTypes
 
 from src.db import get_session
+from src.models.schedule import Lecture
 from src.repositories.schedule_repository import ScheduleRepository
 from src.utils import global_utils, messages, schedule_utils
 from src.utils.bot_utils import with_chat_id
@@ -52,16 +53,10 @@ async def today(
     async with await get_session() as session:
         repo = ScheduleRepository(session)
 
-        today_date = date.today()
-        today_lectures = await repo.get_lectures_for_day(today_date)
+        today_lectures = await repo.get_lectures_for_day(date.today())
 
         message = (
-            "\n".join(
-                (
-                    messages.DATE_TEMPLATE.format(date=today_date),
-                    *map(schedule_utils.format_lecture, today_lectures),
-                )
-            )
+            schedule_utils.format_lectures_by_their_dates(today_lectures)
             if today_lectures
             else messages.EMPTY_TODAY
         )
