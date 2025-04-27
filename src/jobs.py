@@ -44,6 +44,7 @@ async def daily_schedule_update(context: ContextTypes.DEFAULT_TYPE) -> None:
             await context.bot.send_message(
                 chat_id=subscriber.chat_id,
                 text=schedule_utils.format_lectures_by_their_dates(tomorrow_lectures),
+                parse_mode="Markdown",
             )
 
         logger.info(
