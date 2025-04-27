@@ -5,7 +5,6 @@ from telegram import Update
 from telegram.ext import CommandHandler, ContextTypes
 
 from src.db import get_session
-from src.models.schedule import Lecture
 from src.repositories.schedule_repository import ScheduleRepository
 from src.utils import global_utils, messages, schedule_utils
 from src.utils.bot_utils import with_chat_id

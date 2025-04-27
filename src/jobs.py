@@ -1,11 +1,9 @@
 import logging
 from datetime import datetime, time
-from typing import cast
 
 from telegram.ext import ContextTypes
 
 from src.db import get_session
-from src.models.schedule import Lecture
 from src.repositories.schedule_repository import ScheduleRepository
 from src.repositories.subscriber_repository import SubscriberRepository
 from src.services.schedule import update_schedule
@@ -19,6 +17,7 @@ async def daily_schedule_update(context: ContextTypes.DEFAULT_TYPE) -> None:
     Updates the local schedule.
     Notifies all subscribed users about tomorrow lectures.
     """
+
     logger.info("Starting daily update job")
 
     await update_schedule()
