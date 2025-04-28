@@ -50,13 +50,13 @@ def format_lectures_by_their_dates(lectures: Sequence[Lecture]) -> str:
     date_to_lectures_map = defaultdict(list)
 
     for lecture in lectures:
-        date_to_lectures_map[lecture.starts_at].append(lecture)
+        date_to_lectures_map[lecture.starts_at.date()].append(lecture)
 
     return "\n\n".join(
-        (
+        [
             messages.DATE_TEMPLATE.format(date=date)
             + "\n"
-            + "\n".join(*map(format_lecture, lectures))
-        )
-        for date, lectures in date_to_lectures_map.items()
+            + "\n".join(map(format_lecture, lectures))
+            for date, lectures in date_to_lectures_map.items()
+        ]
     )
