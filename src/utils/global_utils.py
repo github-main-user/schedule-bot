@@ -17,7 +17,7 @@ def get_local_today() -> date:
     return now.date()
 
 
-def get_tomorrow() -> date:
+def get_local_tomorrow() -> date:
     """
     Returns a `date` object which contains tomorrow's date.
     Uses the timezone from settings.
