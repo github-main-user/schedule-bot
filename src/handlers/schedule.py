@@ -64,4 +64,33 @@ async def today(
     await context.bot.send_message(chat_id=chat_id, text=message, parse_mode="Markdown")
 
 
-schedule_handlers = [CommandHandler("next", next), CommandHandler("today", today)]
+@with_chat_id
+async def tomorrow(
+    chat_id: int, _update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> None:
+    """
+    Handles /tomorrow command.
+    Fetches the today lectures and prints it to user.
+    Works both for subscribed and unsubscribed users.
+    """
+
+    async with await get_session() as session:
+        repo = ScheduleRepository(session)
+
+        tomorrow_date = global_utils.get_local_tomorrow()
+        tomorrow_lectures = await repo.get_lectures_for_day(tomorrow_date)
+
+        message = (
+            schedule_utils.format_lectures_by_their_dates(tomorrow_lectures)
+            if tomorrow_lectures
+            else messages.EMPTY_TOMORROW
+        )
+
+    await context.bot.send_message(chat_id=chat_id, text=message, parse_mode="Markdown")
+
+
+schedule_handlers = [
+    CommandHandler("next", next),
+    CommandHandler("today", today),
+    CommandHandler("tomorrow", tomorrow),
+]
