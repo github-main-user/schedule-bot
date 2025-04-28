@@ -15,9 +15,10 @@ def get_tomorrow() -> date:
 
 def subtract_minutes(original_time: time, minutes: int) -> time:
     """
-    Subtracts given minutes from given `time`, since python doesn't provide builtin function to solve this problem.
-    Returns another `time` object.
+    Subtracts given minutes from given `time`,
+    since python doesn't provide builtin function to solve this problem.
+    Returns timezone aware time.
     """
-    dummy_dt = datetime.combine(datetime.max, original_time)
+    dummy_dt = datetime.combine(datetime.max, original_time, tzinfo=settings.TIMEZONE)
     new_datetime = dummy_dt - timedelta(minutes=minutes)
-    return new_datetime.time()
+    return new_datetime.timetz()
