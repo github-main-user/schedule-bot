@@ -24,14 +24,14 @@ class Settings(BaseSettings):
     TIMEZONE: ZoneInfo = ZoneInfo("Europe/Moscow")
     SCHEDULE_UPDATE_TIME: time = time(hour=22, minute=0, tzinfo=TIMEZONE)
 
-    SCHEDULE_TIMES: tuple = (
-        time(9, 00),
-        time(10, 40),
-        time(12, 40),
-        time(14, 20),
-        time(16, 00),
-        time(17, 40),
-        time(19, 20),
+    SCHEDULE_TIMES: tuple[time, ...] = (
+        time(9, 00, tzinfo=TIMEZONE),
+        time(10, 40, tzinfo=TIMEZONE),
+        time(12, 40, tzinfo=TIMEZONE),
+        time(14, 20, tzinfo=TIMEZONE),
+        time(16, 00, tzinfo=TIMEZONE),
+        time(17, 40, tzinfo=TIMEZONE),
+        time(19, 20, tzinfo=TIMEZONE),
     )
 
     MINUTES_BEFORE_LECTURE: int = 15
