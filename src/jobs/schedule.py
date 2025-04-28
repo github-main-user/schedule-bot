@@ -27,7 +27,7 @@ async def daily_schedule_update(context: ContextTypes.DEFAULT_TYPE) -> None:
         schedule_repo = ScheduleRepository(session)
         subscriber_repo = SubscriberRepository(session)
 
-        tomorrow_date = global_utils.get_tomorrow()
+        tomorrow_date = global_utils.get_local_tomorrow()
         tomorrow_lectures = await schedule_repo.get_lectures_for_day(tomorrow_date)
 
         subscribers = await subscriber_repo.get_all()
