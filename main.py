@@ -3,11 +3,11 @@ import logging
 
 from telegram.ext import ApplicationBuilder, JobQueue
 
-from src import jobs
 from src.config import settings
 from src.handlers.schedule import schedule_handlers
 from src.handlers.special import special_handlers
 from src.handlers.subscribers import command_handlers
+from src.jobs import schedule as schedule_jobs
 from src.utils.global_utils import subtract_minutes
 
 logging.basicConfig(
@@ -21,11 +21,13 @@ def setup_jobs(job_queue: JobQueue | None) -> None:
         logging.error("job queue is None")
         return
 
-    job_queue.run_daily(jobs.daily_schedule_update, time=settings.SCHEDULE_UPDATE_TIME)
+    job_queue.run_daily(
+        schedule_jobs.daily_schedule_update, time=settings.SCHEDULE_UPDATE_TIME
+    )
 
     for time in settings.SCHEDULE_TIMES:
         job_queue.run_daily(
-            jobs.notify_about_upcoming_lecture,
+            schedule_jobs.notify_about_upcoming_lecture,
             time=subtract_minutes(time, settings.MINUTES_BEFORE_LECTURE),
             data={"original_time": time},
         )

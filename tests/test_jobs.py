@@ -3,7 +3,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from src.jobs import daily_schedule_update, notify_about_upcoming_lecture
+from src.jobs.schedule import daily_schedule_update, notify_about_upcoming_lecture
 from src.models.schedule import Lecture
 from src.models.subscribers import Subscriber
 
