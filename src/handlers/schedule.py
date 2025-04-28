@@ -52,7 +52,8 @@ async def today(
     async with await get_session() as session:
         repo = ScheduleRepository(session)
 
-        today_lectures = await repo.get_lectures_for_day(date.today())
+        today_date = global_utils.get_local_today()
+        today_lectures = await repo.get_lectures_for_day(today_date)
 
         message = (
             schedule_utils.format_lectures_by_their_dates(today_lectures)

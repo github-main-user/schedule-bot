@@ -3,6 +3,7 @@ from datetime import datetime, time
 
 from telegram.ext import ContextTypes
 
+from src.config import settings
 from src.db import get_session
 from src.repositories.schedule_repository import ScheduleRepository
 from src.repositories.subscriber_repository import SubscriberRepository
@@ -66,7 +67,11 @@ async def notify_about_upcoming_lecture(context: ContextTypes.DEFAULT_TYPE) -> N
         return
 
     lecture_time: time = job.data.get("original_time")  # type: ignore
-    exact_lecture_datetime = datetime.combine(date=datetime.today(), time=lecture_time)
+    exact_lecture_datetime = datetime.combine(
+        date=global_utils.get_local_today(),
+        time=lecture_time,
+        tzinfo=settings.TIMEZONE,
+    )
 
     async with await get_session() as session:
         schedule_repo = ScheduleRepository(session)
