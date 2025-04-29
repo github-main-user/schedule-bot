@@ -32,7 +32,7 @@ def setup_jobs(job_queue: JobQueue | None) -> None:
 
 
 def main() -> None:
-    app = ApplicationBuilder().token(settings.TELEGRAM_TOKEN).build()
+    app = ApplicationBuilder().token(settings.TELEGRAM_TOKEN.get_secret_value()).build()
 
     setup_jobs(app.job_queue)
 

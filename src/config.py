@@ -1,6 +1,7 @@
 from datetime import time
 from zoneinfo import ZoneInfo
 
+from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -10,7 +11,7 @@ class Settings(BaseSettings):
     DB_USER: str
     DB_NAME: str
     DB_PASS: str
-    TELEGRAM_TOKEN: str
+    TELEGRAM_TOKEN: SecretStr
     GROUP_ID: int
 
     @property
