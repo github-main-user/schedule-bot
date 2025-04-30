@@ -91,6 +91,7 @@ async def notify_about_upcoming_lecture(context: ContextTypes.DEFAULT_TYPE) -> N
         await context.bot.send_message(
             chat_id=subscriber.chat_id,
             text=schedule_utils.format_lecture_verbose(next_lecture),
+            parse_mode="Markdown",
         )
         logger.info(
             "Subscribed user %s was notified about upcoming lecture", subscriber.chat_id
